@@ -6,14 +6,14 @@
 
 ## 📋 Sobre o Projeto
 
-O projeto está atualmente concentrado no notebook [`PIPELINE.ipynb`](PIPELINE.ipynb), desenvolvido em Python. Ele usa dados CSV publicados no GitHub para analisar dois conjuntos:
+O projeto inclui o notebook [`PIPELINE.ipynb`](PIPELINE.ipynb) e um app Streamlit (`app.py`), desenvolvidos em Python. Eles usam dados CSV publicados no GitHub para analisar dois conjuntos:
 
 - **Transações de vendas**: recibos, data, cliente, funcionário, serviço/produto, quantidade, valor e impostos.
 - **Catálogo de serviços**: descrição, categoria, custo, preço e situação ativa.
 
 O notebook investiga valores ausentes, duplicatas e valores monetários atípicos, prepara versões limpas dos dados e explora relações entre preço, custo, categoria e situação dos serviços. Também exporta a base de vendas tratada para `vendas_limpo.csv`.
 
-O repositório ainda não contém uma aplicação Streamlit. A seção de pipeline abaixo resume como as funções e etapas existentes podem ser organizadas para execução interativa no Streamlit.
+O app permite carregar os CSVs publicados ou enviar arquivos próprios, inspecionar e limpar os dados, visualizar gráficos e baixar os resultados tratados.
 
 ---
 
@@ -44,9 +44,9 @@ flowchart TD
 | **6. Análise de serviços** | Compara custo e preço, distribuição de preços e quantidade por categoria, separando serviços ativos e inativos. | `scatterplot()`, `boxplot()`, `countplot()` |
 | **7. Saída** | Exporta os dados de vendas limpos e apresenta tabelas e gráficos. | `to_csv()` e gráficos Matplotlib/Seaborn |
 
-### Organização sugerida no Streamlit
+### Organização no Streamlit
 
-No Streamlit, a interface oferece seleção de arquivo CSV ou carregamento das URLs padrão, opções de limpeza, abas para vendas e serviços, visualizações interativas e botões de download. Os resultados serão recalculados a partir das opções selecionadas pelo usuário.
+Na interface, há seleção de arquivo CSV ou carregamento das URLs padrão, opções de limpeza, abas para vendas e serviços, visualizações e botões de download. Os resultados são recalculados a partir das opções selecionadas pelo usuário.
 
 ---
 
@@ -86,7 +86,7 @@ As observações anotadas no notebook apontam `STYLE` como categoria com preços
 ![NumPy](https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=white)
 ![Seaborn](https://img.shields.io/badge/Seaborn-4C72B0?style=for-the-badge&logoColor=white)
 ![Matplotlib](https://img.shields.io/badge/Matplotlib-11557C?style=for-the-badge&logoColor=white)
-![Streamlit](https://img.shields.io/badge/Streamlit-Future-EA4335?style=for-the-badge&logo=streamlit&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)
 
 ---
 
@@ -95,7 +95,7 @@ As observações anotadas no notebook apontam `STYLE` como categoria com preços
 ### Pré-requisitos
 
 - Python 3.9 ou superior
-- Jupyter Notebook ou JupyterLab
+- Streamlit
 - Acesso à internet para baixar os CSVs das URLs configuradas no notebook
 
 ### Instalação e execução
@@ -106,11 +106,11 @@ cd ProjetoACE_4P
 python -m venv .venv
 source .venv/bin/activate  # Linux/macOS
 # No Windows: .venv\Scripts\activate
-pip install pandas seaborn numpy matplotlib jupyter
-jupyter notebook PIPELINE.ipynb
+pip install -r requirements.txt
+streamlit run app.py
 ```
 
-Execute as células do notebook em ordem. A célula de exportação grava `vendas_limpo.csv` no diretório de trabalho atual.
+O Streamlit abrirá o painel no navegador. Por padrão, o app carrega os CSVs das URLs do projeto. Pela barra lateral, também é possível escolher **Enviar meus arquivos** e fornecer os dois CSVs. Os botões na página baixam as bases tratadas. Para abrir o notebook original, execute `jupyter notebook PIPELINE.ipynb` (instale `jupyter` separadamente, se necessário).
 
 ### Fontes de dados
 
@@ -125,4 +125,4 @@ No código, o arquivo de recibos é carregado em `df_vendas` e o arquivo de serv
 
 ## ⚠️ Escopo Atual
 
-O projeto contém um notebook de análise exploratória. Ainda não há `app.py`, módulos separados, testes automatizados ou configuração de implantação Streamlit. O pipeline documentado descreve as etapas já representadas no notebook e uma forma de apresentá-las futuramente em uma interface Streamlit.
+O projeto contém o notebook de análise exploratória e uma interface Streamlit em `app.py`. A limpeza e os gráficos seguem as regras registradas no notebook; arquivos enviados precisam ter as colunas esperadas para cada gráfico, e o app informa quando uma coluna necessária não está disponível.
