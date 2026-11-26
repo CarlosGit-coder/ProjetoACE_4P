@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-
 URL_VENDAS = (
     "https://raw.githubusercontent.com/alvarolucio2007/Engenharia-de-Software/"
     "refs/heads/main/4Periodo/CienciaDeDados/ACE/Receipt%20Transactions0.csv"
@@ -28,7 +27,9 @@ def limpar_vendas(df: pd.DataFrame, normalizar_valores: bool) -> pd.DataFrame:
         descricao = resultado["Description"].astype("string").str.strip().str.lower()
         # `str` pode produzir valores ausentes do tipo pd.NA. Preencha a
         # máscara antes de convertê-la para NumPy para evitar truth-value errors.
-        eh_miscellaneous = descricao.eq("miscellaneous").fillna(False).to_numpy(dtype=bool)
+        eh_miscellaneous = (
+            descricao.eq("miscellaneous").fillna(False).to_numpy(dtype=bool)
+        )
         valores = pd.to_numeric(resultado["Amount"], errors="coerce")
         resultado["Amount"] = np.where(eh_miscellaneous, valores, valores.abs())
     return resultado

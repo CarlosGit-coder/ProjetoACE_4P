@@ -9,6 +9,7 @@ from dados.loader import limpar_vendas
 
 def pagina_vendas(df_original: pd.DataFrame, normalizar: bool) -> None:
     df = limpar_vendas(df_original, normalizar)
+    # df = df[df["Amount"] >= 0] #Selecionando apenas maiores que 0, por RN da prof.
     cabecalho_pagina(
         "Vendas",
         "Valores e distribuição das transações após aplicar as opções de tratamento.",
@@ -18,15 +19,23 @@ def pagina_vendas(df_original: pd.DataFrame, normalizar: bool) -> None:
     if "Amount" in df.columns:
         valores = pd.to_numeric(df["Amount"], errors="coerce")
         a, b, c = st.columns(3)
-        a.metric("Valor total", f"{valores.sum():,.2f}", help="Soma dos valores numéricos de Amount.")
-        b.metric("Valor médio", f"{valores.mean():,.2f}", help="Média dos valores numéricos de Amount.")
-        c.metric("Valores negativos", f"{int((valores < 0).sum()):,}")
+        a.metric(
+            "Valor total",
+            f"{valores.sum():,.2f}",
+            help="Soma dos valores numéricos de Amount.",
+        )
+        b.metric(
+            "Valor médio",
+            f"{valores.mean():,.2f}",
+            help="Média dos valores numéricos de Amount.",
+        )
 
     if {"Staff", "Amount"}.issubset(df.columns):
         grafico = df.copy()
         grafico["Amount"] = pd.to_numeric(grafico["Amount"], errors="coerce")
+        grafico = grafico[grafico["Amount"] >= 0]
         fig, ax = plt.subplots(figsize=(7, 3.8))
-        sns.scatterplot(data=grafico, x="Staff", y="Amount", alpha=0.65, color="#70C1B3", ax=ax)
+        sns.boxplot(data=grafico, x="Staff", y="Amount", color="#70C1B3", ax=ax)
         ax.set_title("Valor das transações por funcionário")
         ax.tick_params(axis="x", rotation=45)
         fig.tight_layout()

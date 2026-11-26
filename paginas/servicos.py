@@ -25,8 +25,19 @@ def pagina_servicos(df_original: pd.DataFrame, remover_custo_zero: bool) -> None
         hue = "Cate" if "Cate" in grafico.columns else None
         style = "IsActive" if "IsActive" in grafico.columns else None
         fig, ax = plt.subplots(figsize=(7, 3.8))
-        sns.scatterplot(data=grafico, x="Cost", y="Price", hue=hue, style=style, alpha=0.8, s=70, ax=ax)
+        sns.scatterplot(
+            data=grafico,
+            x="Cost",
+            y="Price",
+            hue=hue,
+            style=style,
+            alpha=0.8,
+            s=70,
+            ax=ax,
+        )
         ax.set_title("Relação entre custo e preço")
+        ax.set_xlabel("Custo")
+        ax.set_ylabel("Preço (R$)")
         fig.tight_layout()
         grafico_coluna, _ = st.columns([1, 1])
         with grafico_coluna:
@@ -38,19 +49,32 @@ def pagina_servicos(df_original: pd.DataFrame, remover_custo_zero: bool) -> None
                 fig, ax = plt.subplots(figsize=(6, 3.8))
                 sns.boxplot(data=grafico, x="Cate", y="Price", hue=style, ax=ax)
                 ax.set_title("Preços por categoria")
+                ax.set_xlabel("Categoria")
+                ax.set_ylabel("Preço (R$)")
                 ax.tick_params(axis="x", rotation=35)
                 fig.tight_layout()
                 st.pyplot(fig, use_container_width=True)
                 plt.close(fig)
             with coluna_contagem:
                 fig, ax = plt.subplots(figsize=(6, 3.8))
-                sns.countplot(data=grafico, x="Cate", hue=style, order=grafico["Cate"].value_counts().index, ax=ax)
+                sns.countplot(
+                    data=grafico,
+                    x="Cate",
+                    hue=style,
+                    order=grafico["Cate"].value_counts().index,
+                    ax=ax,
+                )
                 ax.set_title("Itens por categoria")
                 ax.tick_params(axis="x", rotation=35)
+                ax.set_xlabel("Categoria")
+                ax.set_ylabel("Quantidade de Itens")
                 fig.tight_layout()
                 st.pyplot(fig, use_container_width=True)
                 plt.close(fig)
 
     st.download_button(
-        "Baixar catálogo tratado (CSV)", csv_bytes(df), "servicos_limpos.csv", "text/csv"
+        "Baixar catálogo tratado (CSV)",
+        csv_bytes(df),
+        "servicos_limpos.csv",
+        "text/csv",
     )
